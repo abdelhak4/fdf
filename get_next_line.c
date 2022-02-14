@@ -12,7 +12,6 @@
 
 #include "get_next_line.h"
 
-
 int	ft_strchr(char *s, int c)
 {
 	int		i;

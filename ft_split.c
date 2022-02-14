@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-static char	**c_str(char **str, char const *s, char c)
+static void	c_str(char **str, char const *s, char c)
 {
 	size_t	i;
 	size_t	k;
@@ -36,7 +36,6 @@ static char	**c_str(char **str, char const *s, char c)
 		if (s[i] != 0)
 			i++;
 	}
-	return (str);
 }
 
 static int	w_count(char const *s, char c)
@@ -57,18 +56,16 @@ static int	w_count(char const *s, char c)
 
 char	**ft_split(char const *s, char c)
 {
-	int		i;
 	int		count;
 	char	**str;
 
 	if (!s)
 		return (0);
-	i = 0;
 	count = w_count(s, c);
 	str = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!str)
 		return (NULL);
-	str = c_str(str, s, c);
+	c_str(str, s, c);
 	str[count] = NULL;
 	return (str);
 }

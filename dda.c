@@ -1,63 +1,90 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dda.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ael-mous <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/13 13:10:04 by ael-mous          #+#    #+#             */
+/*   Updated: 2022/02/13 13:17:12 by ael-mous         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
-void	my_mlx_pixel_put(m_list *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_list *data, int x, int y, int color)
 {
 	char	*dst;
 
-	if (x >=0 && x <= 800 && y >= 0 && y <= 800) {
-		dst = data->data_addr + (y * data->size_line + x * (data->bites_per_pixle / 8));
-		*(unsigned int *) dst = color;
+	if (x >= 0 && x <= 2000 && y >= 0 && y <= 1200)
+	{
+			dst = data->data_addr + (y * data->size_line + x
+				* (data->bites_per_pixle / 8));
+			*(unsigned int *) dst = color;
 	}
 }
 
-s_info	cpy_inos(int x, int y)
+t_info	cpy_infos(int x, int y, t_edge *matrix)
 {
-	s_info list;
-	list.x = x;
-	list.y = y;
+	int		z;
+	t_info	list;
+
+	list.scaling = 350;
+	z = matrix->cords[y][x];
+	list.color = 0;
+	if (z != 0)
+		list.color = 0xFF0000;
+	list.x = x * matrix->zoom;
+	list.y = y * matrix->zoom;
+	list.z = z;
 	return (list);
 }
 
-s_info to_iso(s_info iso)
+t_info	to_iso(t_info iso)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
 	x = iso.x;
 	y = iso.y;
 	iso.x = x - y;
-	iso.y = (x + y) / 2;
+	iso.y = ((x + y) / 2) - iso.z;
+	iso.x += iso.scaling;
+	iso.y += iso.scaling;
 	return (iso);
 }
 
-void	draw(m_list data,s_info from_first, s_info to_last, t_edge next_p)
+void	draw(t_list data, t_info from_first, t_info to_last, t_edge next_p)
 {
 	int		steps;
 	int		dx;
 	int		dy;
-	float 	Xincrement;
-	float 	Yincrement;
+	float	x_inc;
+	float	y_inc;
 
-	from_first.x *= 30;
-	to_last.x *= 30;
-	from_first.y *= 30;
-	to_last.y *= 30;
-	dx = from_first.x - to_last.x;
-	dy = from_first.y - to_last.y;
-	next_p.x = (float) from_first.x;
-	next_p.y = (float) from_first.y;
+	if (from_first.color)
+		next_p.color = from_first.color;
+	else if (to_last.color)
+		next_p.color = to_last.color;
+	else
+		next_p.color = 0x0000FF;
+	dx = to_last.x - from_first.x;
+	dy = to_last.y - from_first.y;
+	next_p.xf = (float) from_first.x;
+	next_p.yf = (float) from_first.y ;
 	if (abs(dx) > abs(dy))
 		steps = abs(dx);
 	else
 		steps = abs(dy);
-	Xincrement = dx / steps;
-	Yincrement = dy / steps;
-	dx = 0;
+	x_inc = (float)dx / (float)steps;
+	y_inc = (float)dy / (float)steps;
+	dx = 1;
 	while (dx <= steps)
 	{
-		my_mlx_pixel_put(&data, roundf(next_p.x) , roundf(next_p.y), 0xFFA500);
-		next_p.x += Xincrement;
-		next_p.y += Yincrement;
+		my_mlx_pixel_put(&data, (int)roundf(next_p.xf),
+			(int)roundf(next_p.yf), next_p.color);
+		next_p.xf += x_inc;
+		next_p.yf += y_inc;
 		dx++;
 	}
 }
