@@ -29,13 +29,13 @@ t_info	cpy_infos(int x, int y, t_edge *matrix)
 	int		z;
 	t_info	list;
 
-	list.scaling = 350;
 	z = matrix->cords[y][x];
+	printf("%d\n", z);
 	list.color = 0;
 	if (z != 0)
 		list.color = 0xFF0000;
-	list.x = x * matrix->zoom;
-	list.y = y * matrix->zoom;
+	list.x = x;
+	list.y = y;
 	list.z = z;
 	return (list);
 }
@@ -45,12 +45,13 @@ t_info	to_iso(t_info iso)
 	int	x;
 	int	y;
 
+	iso.scaling = 1;
 	x = iso.x;
 	y = iso.y;
 	iso.x = x - y;
 	iso.y = ((x + y) / 2) - iso.z;
-	iso.x += iso.scaling;
-	iso.y += iso.scaling;
+//	iso.x += iso.scaling;
+//	iso.y += iso.scaling;
 	return (iso);
 }
 
@@ -61,6 +62,11 @@ void	draw(t_list data, t_info from_first, t_info to_last, t_edge next_p)
 	int		dy;
 	float	x_inc;
 	float	y_inc;
+	printf("jfdkj\n");
+	from_first.x += from_first.scaling;
+	from_first.y += from_first.scaling;
+	to_last.x += from_first.scaling;
+	to_last.y += from_first.scaling;
 
 	if (from_first.color)
 		next_p.color = from_first.color;

@@ -41,7 +41,12 @@ int	destroy(int keyPres, t_list *param)
 		exit(0);
 	else if (keyPres == 69)
 	{
+		printf("%d\n\n", param->info.scaling);
 		mlx_clear_window(param->mlx_ptr, param->mlx_win);
+		param->info.scaling += 10;
+		printf("%d\n", param->info.scaling);
+		exit(1);
+		dda_draw(param, param->saved);
 	}
 	return (0);
 }
@@ -58,8 +63,8 @@ void	draw_fun(t_list *data, t_edge *save_matrix)
 	data->img = mlx_new_image(data->mlx_ptr, 2000, 1200);
 	data->data_addr = mlx_get_data_addr(data->img, &data->bites_per_pixle,
 			&data->size_line, &data->endian);
-	dda_draw(data, save_matrix);
 	mlx_key_hook(data->mlx_win, destroy, data);
+	dda_draw(data, save_matrix);
 	mlx_put_image_to_window(data->mlx_ptr, data->mlx_win, data->img, 0, 0);
 	mlx_hook(data->mlx_win, 17, 0, close_frame, NULL);
 	mlx_loop(data->mlx_ptr);
@@ -76,7 +81,7 @@ int	main(int argc, char **argv)
 		write(1, "Please enter a map path\n", 24);
 		return (-1);
 	}
-	save_matrix.zoom = 30;
+	save_matrix.zoom = 1;
 	save_matrix.rows = 0;
 	save_matrix.columns = 0;
 	fun_to_read_store_lines(argv, &save_matrix);
