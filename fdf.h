@@ -12,7 +12,7 @@
 
 #ifndef FDF_H
 # define FDF_H
-# include "utils/minilibx/mlx.h"
+# include <mlx.h>
 # include <stdio.h>
 # include <math.h>
 # include <fcntl.h>
@@ -38,7 +38,7 @@ typedef struct t_infos
 	int	y;
 	int	z;
 	int	color;
-	int scaling;
+	int	scaling;
 }	t_info;
 
 typedef struct t_data
@@ -50,18 +50,21 @@ typedef struct t_data
 	int		size_line;
 	int		endian;
 	char	*data_addr;
-	t_info 	info;
+	t_info	info;
 }		t_list;
 
-
+void	my_mlx_pixel_put(t_list *data, int x, int y, int color);
 void	fun_to_read_store_lines(char **argv, t_edge *save_matrx);
 void	draw(t_list data, t_info from_first, t_info to_last, t_edge next_p);
 t_info	to_iso(t_info iso);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 t_info	cpy_infos(int x, int y, t_edge *matrix);
 void	my_mlx_pixel_put(t_list *data, int x, int y, int color);
 int		ft_atoi(const char *str);
 char	**ft_split(char const *s, char c);
 char	*get_next_line(int fd);
+void	ft_check_ext(int ac, char **av);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+void	ft_free(void **to_free);
 
 #endif

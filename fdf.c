@@ -6,7 +6,7 @@
 /*   By: ael-mous <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/13 12:53:44 by ael-mous          #+#    #+#             */
-/*   Updated: 2022/02/13 13:02:32 by ael-mous         ###   ########.fr       */
+/*   Updated: 2022/03/01 13:49:40 by ael-mous         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,10 @@ void	dda_draw(t_list *data, t_edge *save_matrix)
 	}
 }
 
-int	destroy(int keyPres, t_list *param)
+int	destroy(int keyPres)
 {
 	if (keyPres == ESC)
 		exit(0);
-	else if (keyPres == 69)
-	{
-		printf("%d\n\n", param->info.scaling);
-		mlx_clear_window(param->mlx_ptr, param->mlx_win);
-		param->info.scaling += 10;
-		printf("%d\n", param->info.scaling);
-		exit(1);
-		dda_draw(param, param->saved);
-	}
 	return (0);
 }
 
@@ -81,7 +72,8 @@ int	main(int argc, char **argv)
 		write(1, "Please enter a map path\n", 24);
 		return (-1);
 	}
-	save_matrix.zoom = 1;
+	ft_check_ext(argc, argv);
+	save_matrix.zoom = 4;
 	save_matrix.rows = 0;
 	save_matrix.columns = 0;
 	fun_to_read_store_lines(argv, &save_matrix);
